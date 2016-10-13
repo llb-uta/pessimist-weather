@@ -1,0 +1,38 @@
+html, body, iframe
+{
+	color: white;
+	margin: 0;
+	font-family: 'Roboto', cursive;
+	font-weight: 300;
+	font-size: 10px;
+	color: #666666;
+}
+
+
+.text-l
+{
+	font-size: 14px;
+}
+.text-xl
+{
+	font-size: 36px;
+}
+.text-s
+{
+	font-size: 10px;
+}
+
+.forecast_row
+{
+	border-bottom: 1px solid #dff1e0;
+}
+
+.forecast_first
+{
+	border-top: 1px solid #dff1e0;
+}
+
+.forecast_row span
+{
+	padding: 5px;
+}
