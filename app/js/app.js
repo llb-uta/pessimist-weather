@@ -53,7 +53,32 @@ pw.controller('MainController', ['$rootScope', '$http', function($rootScope, $ht
 	vm.weatherdata = {}
 
 
-	$http.get('https://ipinfo.io/json').success(function(data){
+	llb_app.addListener('location', function(result){
+
+		if(result.status == 'failure')
+		{
+			vm.failed = true
+			return;
+		}
+
+		$http.get('https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20u%3D%22c%22%20and%20woeid%20in%20(SELECT%20woeid%20FROM%20geo.places%20WHERE%20text%3D%22('+result.data.latitude+'%2C'+result.data.longitude+')%22)&format=json').success(function(res){
+			vm.weatherdata.current_temp = res.query.results.channel.item.condition.temp;
+			vm.weatherdata.temp_max = res.query.results.channel.item.forecast[0].high;
+			vm.weatherdata.temp_min = res.query.results.channel.item.forecast[0].low;
+
+			vm.forecast = res.query.results.channel.item.forecast
+			vm.location = res.query.results.channel.location.city + ', '+ res.query.results.channel.location.country
+
+			vm.loading = false;
+
+			vm.weatherdata.iconCode = res.query.results.channel.item.condition.code
+			vm.weatherdata.description = res.query.results.channel.item.condition.text
+		})
+	})
+
+	llb_app.request('location')
+
+/*	$http.get('https://ipinfo.io/json').success(function(data){
 		data.city = 'Tampere'
 		data.country = 'FI'
 		$http.get('https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20u%3D"c"%20and%20woeid%20in%20(select%20woeid%20from%20geo.places%20where%20text%3D%22'+data.city+'%2C'+data.country+'%22)&format=json').success(function(res){
@@ -75,7 +100,7 @@ pw.controller('MainController', ['$rootScope', '$http', function($rootScope, $ht
 		})
 	})
 
-
+*/
 	vm.getQuote = function(code)
 	{
 		switch(true)
